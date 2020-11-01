@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx-deploy-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: v2
+    spec:
+      containers:
+      - image: arieszhang/nginx-istio-test:v2
+        name: nginx
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi      
+          
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-v2
+spec:
+    selector:
+      app: nginx
+      version: v2
+    ports:
+        - port: 80
